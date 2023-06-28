@@ -2,6 +2,8 @@ package p3.graph;
 
 import p3.SetUtils;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -43,8 +45,21 @@ public class BasicGraph<N> implements Graph<N> {
     public BasicGraph(Set<N> nodes, Set<Edge<N>> edges) {
         this.nodes = SetUtils.immutableCopyOf(nodes);
         this.edges = SetUtils.immutableCopyOf(edges);
-
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 a): remove if implemented
+        this.backing = new HashMap<>();
+        for (Edge<N> edge: edges) {
+            for (N node : nodes) {
+                if (edge.a().equals(node) || edge.b().equals(node)) {
+                    if (backing.containsKey(node)) {
+                        backing.get(node).add(edge);
+                    }
+                    else {
+                        Set<Edge<N>> setOfEdges = new HashSet<>();
+                        setOfEdges.add(edge);
+                        backing.put(node, setOfEdges);
+                    }
+                }
+            }
+        }
     }
 
     @Override
