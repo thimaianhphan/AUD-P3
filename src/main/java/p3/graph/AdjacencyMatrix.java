@@ -33,6 +33,7 @@ public class AdjacencyMatrix {
      */
     public void addEdge(int a, int b, int weight) {
         matrix[a][b] = weight;
+        matrix[b][a] = weight;
     }
 
     /**
