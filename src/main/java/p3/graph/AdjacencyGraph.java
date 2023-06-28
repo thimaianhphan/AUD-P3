@@ -3,6 +3,7 @@ package p3.graph;
 import p3.SetUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +52,17 @@ public class AdjacencyGraph<N> implements Graph<N> {
         this.nodes = SetUtils.immutableCopyOf(nodes);
         this.edges = SetUtils.immutableCopyOf(edges);
 
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 c): remove if implemented
+        int index = 0;
+        for (N node : nodes) {
+            nodeIndices.put(node, index);
+            indexNodes.put(index, node);
+            index++;
+        }
+
+        for (Edge<N> edge : edges) {
+            matrix.addEdge(nodeIndices.get(edge.a()), nodeIndices.get(edge.b()), edge.weight());
+            matrix.addEdge(nodeIndices.get(edge.b()), nodeIndices.get(edge.a()), edge.weight());
+        }
     }
 
     @Override
@@ -66,7 +77,17 @@ public class AdjacencyGraph<N> implements Graph<N> {
 
     @Override
     public Set<Edge<N>> getAdjacentEdges(N node) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H1 c): remove if implemented
+        Set<Edge<N>> edges = new HashSet<>();
+        int indexThisNode = nodeIndices.get(node);
+        int[] adjacentEdges = matrix.getAdjacent(indexThisNode);
+
+        for (int i = 0; i < adjacentEdges.length; i++) {
+            if (adjacentEdges[i] != 0) {
+                N otherNode = indexNodes.get(i);
+                edges.add(new EdgeImpl<>(node, otherNode, adjacentEdges[i]));
+            }
+        }
+        return edges;
     }
 
     @Override

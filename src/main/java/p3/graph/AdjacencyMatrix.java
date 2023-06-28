@@ -54,10 +54,10 @@ public class AdjacencyMatrix {
      * @return an array of the weights of the edges adjacent to the given index
      */
     public int[] getAdjacent(int index) {
-        int[] adjacentEdge = new int[matrix[index].length];
+        int[] adjacentEdges = new int[matrix[index].length];
         int i = 0;
         for (int weight : matrix[index])
-            adjacentEdge[i++] = weight;
-        return adjacentEdge;
+            adjacentEdges[i++] = weight;
+        return adjacentEdges;
     }
 }
