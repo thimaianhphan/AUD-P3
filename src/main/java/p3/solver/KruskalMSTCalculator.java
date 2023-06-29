@@ -3,10 +3,7 @@ package p3.solver;
 import p3.graph.Edge;
 import p3.graph.Graph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Implementation of Kruskal's algorithm, a minimum spanning tree algorithm.
@@ -49,7 +46,12 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
     }
     @Override
     public Graph<N> calculateMST() {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 e): remove if implemented
+        init();
+        Set<Edge<N>> edges = graph.getEdges();
+        for (Edge<N> edge : edges) {
+            if (acceptEdge(edge)) mstEdges.add(edge);
+        }
+        return Graph.of(graph.getNodes(), mstEdges);
     }
 
     /**
@@ -57,7 +59,13 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * <p> Initially, {@link #mstEdges} is empty and {@link #mstGroups} contains a set for each node in the graph.
      */
     protected void init() {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 b): remove if implemented
+        mstEdges.clear();
+        Set<N> nodes = graph.getNodes();
+        for (N node : nodes) {
+            Set<N> setOfNode = new HashSet<>();
+            setOfNode.add(node);
+            mstGroups.add(setOfNode);
+        }
     }
 
     /**
@@ -70,8 +78,16 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * {@code false} if it was skipped.
      */
     protected boolean acceptEdge(Edge<N> edge) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 d): remove if implemented
+        N nodeA = edge.a(), nodeB = edge.b();
+        int aIndex = 0, bIndex = 0;
 
+        for (int i = 0; i < mstGroups.size(); i++) {
+            if (mstGroups.get(i).contains(nodeA) && mstGroups.get(i).contains(nodeB)) return false;
+            if (mstGroups.get(i).contains(nodeA)) aIndex = i;
+            if (mstGroups.get(i).contains(nodeB)) bIndex = i;
+        }
+        joinGroups(aIndex, bIndex);
+        return true;
     }
 
     /**
@@ -83,7 +99,13 @@ public class KruskalMSTCalculator<N> implements MSTCalculator<N> {
      * @param bIndex The index of the second set to join.
      */
     protected void joinGroups(int aIndex, int bIndex) {
-        throw new UnsupportedOperationException("Not implemented yet"); // TODO H2 c): remove if implemented
+        if (mstGroups.get(aIndex).size() > mstGroups.get(bIndex).size()) {
+            mstGroups.get(aIndex).addAll(mstGroups.get(bIndex));
+            mstGroups.remove(bIndex);
+        } else {
+            mstGroups.get(bIndex).addAll(mstGroups.get(aIndex));
+            mstGroups.remove(aIndex);
+        }
 
     }
 }
